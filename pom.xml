@@ -107,9 +107,13 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				
 				</configuration>
+			
 			</plugin>
+		
 		</plugins>
+		<finalName>authorization-microservice</finalName>
 	</build>
 
 </project>
