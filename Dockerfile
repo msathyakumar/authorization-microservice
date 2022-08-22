@@ -2,3 +2,5 @@ FROM openjdk:8-jdk-alpine
 MAINTAINER baeldung.com
 COPY target/authorization-microservice.jar  authorization-microservice.jar
 ENTRYPOINT ["java","-jar","authorization-microservice.jar"]
+
+
