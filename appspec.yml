@@ -1,0 +1,9 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: "arn:aws:ecs:us-west-2:274201610284:task-definition/authorization-microservice:1"
+        LoadBalancerInfo:
+          ContainerName: "SampleApplicationName"
+          ContainerPort: 80
