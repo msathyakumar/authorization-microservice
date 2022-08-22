@@ -1,27 +1,60 @@
+#version: 0.2
+#
+#phases:
+#  pre_build:
+#    commands:
+#      - echo Logging in to Amazon ECR...
+#      - aws --version
+#      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 
+#      - REPOSITORY_URI=274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice/authorization-microservice
+#      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+#      - IMAGE_TAG=${COMMIT_HASH:=latest}
+#  build:
+#    commands:
+#      - echo Build started on `date`
+#      - echo Building the Docker image...
+#      - docker build -t $REPOSITORY_URI:latest .
+#      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+#  post_build:
+#    commands:
+#      - echo Build completed on `date`
+#      - echo Pushing the Docker images...
+#      - docker push $REPOSITORY_URI:latest
+#      - docker push $REPOSITORY_URI:$IMAGE_TAG
+#      - echo Writing image definitions file...
+#      - printf '[{"name":"hello-world","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+#artifacts:
+#    files: imagedefinitions.json
+#    
+    
 version: 0.2
-
 phases:
+  install:
+    runtime-versions:
+      java: corretto17
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws --version
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 274201610284.dkr.ecr.us-west-2.amazonaws.com
-      - REPOSITORY_URI=274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice/authorization-microservice
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
+    - echo Logging in to Amazon ECR...
+    - aws --version
+    - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 274201610284.dkr.ecr.us-west-2.amazonaws.com
+    - IMAGE_NAME=authorization-microservice
+    - IMAGE_URI=274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice:latest
+    - CONTAINER_NAME=authorization-microservice
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:latest .
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+    - echo Build started on date
+    - echo $IMAGE_NAME
+    - mvn clean package -Ddockerfile.skip
+    - docker build -t $IMAGE_NAME .
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"hello-world","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+    - echo Build completed on date
+    - echo $(docker images)
+    - docker tag $IMAGE_NAME $IMAGE_URI
+    - echo Pushing docker image
+    - docker push $IMAGE_URI
+    - echo push completed
+    - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $IMAGE_URI > imagedefinitions.json
 artifacts:
-    files: imagedefinitions.json
+  files:
+  - imagedefinitions.json
