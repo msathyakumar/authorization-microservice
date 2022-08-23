@@ -17,8 +17,8 @@ import com.cognizant.microservice.authorizationmicroservice.model.AuthRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-@SpringBootTest(classes = AuthenticationController.class)
-@AutoConfigureMockMvc
+//@SpringBootTest(classes = AuthenticationController.class)
+//@AutoConfigureMockMvc
 public class AuthControllerTests {
 	
 	@Autowired

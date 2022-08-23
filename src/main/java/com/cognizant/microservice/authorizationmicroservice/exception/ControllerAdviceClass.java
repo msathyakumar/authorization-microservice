@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerAdviceClass {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ControllerAdviceClass.class);
+	private static final Logger LOGGER2 = LoggerFactory.getLogger(ControllerAdviceClass.class);
 
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> controllerAdviceResponse(ResourceNotFound e) {
-		LOGGER.info("STARTED - controllerAdviceResponse");
+		LOGGER2.info("STARTED - controllerAdviceResponse");
 		ErrorResponse response = new ErrorResponse();
 		response.setMessage(e.getMessage());
 		response.setStatusCode(HttpStatus.NOT_FOUND.value());
 		response.setExceptionTime(System.currentTimeMillis());
-		LOGGER.info("END - controllerAdviceResponse");
+		LOGGER2.info("END - controllerAdviceResponse");
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 	}
 }
