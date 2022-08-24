@@ -1,5 +1,8 @@
 package com.cognizant.microservice.authorizationmicroservice.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
@@ -23,7 +26,7 @@ import com.cognizant.microservice.authorizationmicroservice.service.CustomUserDe
 import com.cognizant.microservice.authorizationmicroservice.util.JwtUtil;
 import com.google.common.net.HttpHeaders;
 @RestController
-@CrossOrigin()
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
 
 	private static final Logger LOGGER1 = LoggerFactory.getLogger(AuthenticationController.class);
@@ -59,14 +62,22 @@ public class AuthenticationController {
 			LOGGER1.error("EXCEPTION - generateToken");
 			throw new ResourceNotFound("user not found");
 		}
-
+		Map<Object, Object> model = new HashMap<>();
+        model.put("username", authRequest.getUserName());
+        model.put("token",jwtUtil.generateToken(authRequest.getUserName()) );
+        String token = jwtUtil.generateToken(authRequest.getUserName());
+       
 		LOGGER1.info("END - generateToken");
 //		return ResponseEntity.ok()
 //        .header(
 //            HttpHeaders.AUTHORIZATION,jwtUtil.generateToken(authRequest.getUserName())
+		return new ResponseEntity<String>(token,HttpStatus.OK);
 //            
 //        )
-		return ResponseEntity.ok().header("token",jwtUtil.generateToken(authRequest.getUserName())).body(jwtUtil.generateToken(authRequest.getUserName()));
+		//return ResponseEntity.ok(model);
+		//return ResponseEntity.ok().header(jwtUtil.generateToken(authRequest.getUserName())).body(jwtUtil.generateToken(authRequest.getUserName()));
+
+		//return ResponseEntity.ok().header("token",jwtUtil.generateToken(authRequest.getUserName())).body(jwtUtil.generateToken(authRequest.getUserName()));
 	}
 
 //validtiion of the generated jwt token to access '/authorize' endpoint

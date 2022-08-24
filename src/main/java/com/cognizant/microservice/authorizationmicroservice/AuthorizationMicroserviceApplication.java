@@ -22,7 +22,7 @@ public class AuthorizationMicroserviceApplication {
 
 	@PostConstruct
 	public void initUser() {
-		List<Users> users = Stream.of(new Users(101, "sathya", "password1"), new Users(102, "User2", "password2")
+		List<Users> users = Stream.of(new Users(101, "sathya", "sathya"), new Users(102, "admin", "admin"),new Users(102, "user", "user")
 
 		).collect(Collectors.toList());
 		repository.saveAll(users);
