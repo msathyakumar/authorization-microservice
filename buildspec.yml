@@ -33,8 +33,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      docker: 18
-      java: corretto11
+      java: corretto8
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -46,14 +45,14 @@ phases:
       - cd authorization-microservice  
       - mvn clean package
       - echo Building the docker image
-      - docker build -t authorization-microservice .
-      - docker tag authorization-service 274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice:latest
+      - docker build -t authorization-microservice  .
+      - docker tag authorization-microservice:latest 274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice:latest
   post_build:
     commands:
       - echo Build completed on `date`
-      - docker push 274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-service:latest
+      - docker push 274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice:latest
       - echo Writing definition files
-      - printf '[{"name":"ij028-authorization-service-container","imageUri":"%s"}]' 274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice:latest > taskdefinition.json
+      - printf '[{"name":"ij028-authorization-microservice-container","imageUri":"%s"}]' 274201610284.dkr.ecr.us-west-2.amazonaws.com/authorization-microservice:latest > taskdefinition.json
 
 artifacts:
   files: authorization-service/imagedefinitions.json
