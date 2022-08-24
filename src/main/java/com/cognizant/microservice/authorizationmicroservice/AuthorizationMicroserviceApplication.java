@@ -29,6 +29,7 @@ public class AuthorizationMicroserviceApplication {
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(AuthorizationMicroserviceApplication.class, args);
+		//final release
 	}
 
 }
